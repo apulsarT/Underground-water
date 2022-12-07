@@ -9,18 +9,32 @@ df_underground = pd.read_csv('data/underground.csv')
 df_weather = pd.read_csv('data/weather.csv')
 
 #Functions
+# def prep(df):
+#   df['DateTime']=pd.to_datetime(df['DateTime'])
+#   df['DateTime'] = df['DateTime'] + timedelta(hours=8)
+#   df = df[df['DateTime'].dt.year > 2021]
+#   df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:%M:00')
+#   df['DateTime'] = pd.to_datetime(df['DateTime'])
+#   df['month'] = df['DateTime'].dt.month
+#   df['day'] = df['DateTime'].dt.day
+#   df['hours'] = df['DateTime'].dt.hour
+#   df['minutes'] = df['DateTime'].dt.minute
+#   df['DateTime'] = df['DateTime'].dt.round('10min')
+#   df = df.groupby(['month','day','hours','minutes']).first().reset_index()
+#   df= df.sort_values(by='DateTime')
+#   return df 
+
 def prep(df):
   df['DateTime']=pd.to_datetime(df['DateTime'])
   df['DateTime'] = df['DateTime'] + timedelta(hours=8)
   df = df[df['DateTime'].dt.year > 2021]
-  df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:%M:00')
+  df['DateTime'] = df['DateTime'].dt.strftime('%Y-%m-%d %H:00:00')
   df['DateTime'] = pd.to_datetime(df['DateTime'])
-  df['month'] = df['DateTime'].dt.month
-  df['day'] = df['DateTime'].dt.day
-  df['hours'] = df['DateTime'].dt.hour
+  df["month"] = df['DateTime'].dt.month
+  df["day"] = df['DateTime'].dt.day
+  df["hours"] = df['DateTime'].dt.hour
   df['minutes'] = df['DateTime'].dt.minute
-  df['DateTime'] = df['DateTime'].dt.round('10min')
-  df = df.groupby(['month','day','hours','minutes']).first().reset_index()
+  df = df.groupby(['month','day','hours']).first().reset_index()
   df= df.sort_values(by='DateTime')
   return df 
 
@@ -61,26 +75,27 @@ def adddate(df):
 
 
 # For November data, the EUI changes to DeviceID column. Change the DeviceID to their respective EUI.
-df1 = df_underground[df_underground['EUI'].notna()]
-df2 = df_underground[df_underground['DeviceID'].notna()]
+dfEUI = df_underground[df_underground['EUI'].notna()]
+dfID = df_underground[df_underground['DeviceID'].notna()]
 
 conditions = [
-    (df2['DeviceID'] == "UDW-001"),
-    (df2['DeviceID'] == "UDW-002"),
-    (df2['DeviceID'] == "UDW-003"),
-    (df2['DeviceID'] == "UDW-004"),
-    (df2['DeviceID'] == "UDW-005"),
-    (df2['DeviceID'] == "UDW-006"),
-    (df2['DeviceID'] == "UDW-007"),
-    (df2['DeviceID'] == "UDW-009"),
-    (df2['DeviceID'] == "UDW-010"),
-    (df2['DeviceID'] == "UDW-011")
+    (dfID['DeviceID'] == "UDW-001"),
+    (dfID['DeviceID'] == "UDW-002"),
+    (dfID['DeviceID'] == "UDW-003"),
+    (dfID['DeviceID'] == "UDW-004"),
+    (dfID['DeviceID'] == "UDW-005"),
+    (dfID['DeviceID'] == "UDW-006"),
+    (dfID['DeviceID'] == "UDW-007"),
+    (dfID['DeviceID'] == "UDW-009"),
+    (dfID['DeviceID'] == "UDW-010"),
+    (dfID['DeviceID'] == "UDW-011")
 ]
 
 values = ["24E124126C326140","24E124126C326742","24E124126C326591","24E124126C326567","24E124126C326675","24E124126C326708","24E124126C326655","24E124126C326081","24E124126C326637","24E124126C326709"]
-df2['EUI'] = np.select(conditions, values)
 
-df_underground = df1.append(df2,ignore_index=True)
+dfID['EUI'] = np.select(conditions, values)
+
+df_underground = dfEUI.append(dfID,ignore_index=True)
 df_underground.reset_index(inplace=True, drop=True)
 df_underground = df_underground.sort_values(by='DateTime')
 
@@ -99,6 +114,7 @@ conditions = [
 ]
 
 point = [1,2,3,4,5,6,7,8,9,10]
+
 df_underground['point'] = np.select(conditions, point)
 
 #pre-process the data
