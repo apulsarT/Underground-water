@@ -121,7 +121,7 @@ dfhourrain['hours'] = dfhourrain['DateTime'].dt.hour
 groupweather=(dfhourrain.groupby(['month','day']).agg({'WeatherRain':'max','got_rain':'sum'}).reset_index())
 groupweather.columns = ['month', 'day', 'maxrain','durationrain']
 groupweather['raindensity'] = groupweather['maxrain']/groupweather['durationrain']
-
+groupweather['raindensity'] = groupweather['raindensity'].fillna(0)
 
 
 EUI = ['24E124126C326140']
@@ -238,4 +238,24 @@ df8group["month-day"] = df8group['month'].astype(str)+"-"+ df8group["day"].astyp
 df9group["month-day"] = df9group['month'].astype(str)+"-"+ df9group["day"].astype(str)
 df10group["month-day"] = df10group['month'].astype(str)+"-"+ df10group["day"].astype(str)
 
+df1rain = pd.merge(df1group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df1rain = df1rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df2rain = pd.merge(df2group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df2rain = df2rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df3rain = pd.merge(df3group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df3rain = df3rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df4rain = pd.merge(df4group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df4rain = df4rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df5rain = pd.merge(df5group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df5rain = df5rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df6rain = pd.merge(df6group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df6rain = df6rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df7rain = pd.merge(df7group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df7rain = df7rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df8rain = pd.merge(df8group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df8rain = df8rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df9rain = pd.merge(df9group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df9rain = df9rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
+df10rain = pd.merge(df10group,grouped_df,left_on='month-day',right_on='month-day',how='right')
+df10rain = df10rain[['month-day','WeatherRain','WaterLevel','lag1','lag2']]
 
